@@ -17,14 +17,6 @@ import net.minidev.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.PersonName;
 import org.openmrs.User;
 import org.openmrs.annotation.Handler;
 import org.openmrs.api.PersonService;
@@ -35,7 +27,6 @@ import org.openmrs.module.muzima.model.handler.QueueDataHandler;
 import org.openmrs.module.muzimaregistration.utils.JsonUtils;
 import org.openmrs.module.muzimaregistration.utils.PatientSearchUtils;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -79,32 +70,17 @@ public class ObsUpdateQueueDataHandler implements QueueDataHandler {
     }
 
     private void updateSavedObs(){
-        if(unsavedObs.getConceptId() != null){
-            savedPatient.addIdentifiers(unsavedPatient.getIdentifiers());
+        if(unsavedObs.getUuid() != null){
+            savedObs.setUuid(unsavedObs.getUuid());
         }
         if(unsavedObs.getObsDateTime() != null) {
-            savedPatient.setObsDateTime(unsavedObs.getObsDateTime());
+            savedObs.setObsDateTime(unsavedObs.getObsDateTime());
         }
-        if(StringUtils.isNotBlank(unsavedObs.getObsId())) {
-            savedObs.setObsId(unsavedObs.getObsId());
-        }
-        if(unsavedObs..getBirthdate() != null) {
-            savedPatient.setBirthdate(unsavedPatient.getBirthdate());
-            savedPatient.setBirthdateEstimated(unsavedPatient.getBirthdateEstimated());
-        }
-        if(unsavedPatient.getPersonAddress() != null) {
-            savedPatient.addAddress(unsavedPatient.getPersonAddress());
-        }
-        if(unsavedPatient.getAttributes() != null) {
-            Set<PersonAttribute> attributes = unsavedPatient.getAttributes();
-            Iterator<PersonAttribute> iterator = attributes.iterator();
-            while(iterator.hasNext()) {
-                savedPatient.addAttribute(iterator.next());
-            }
-        }
-        if(unsavedPatient.getChangedBy() != null) {
-            savedPatient.setChangedBy(unsavedPatient.getChangedBy());
-        }
+        if(StringUtils.isNotBlank(unsavedObs.getObsValue())) {
+            savedObs.setObsValue(unsavedObs.getObsValue());
+        }  
+        
+        savedObs.setVoided = true;
     }
 
     @Override
